@@ -3,7 +3,7 @@ Demonstrate your coding skills by designing and implementing a microservices sys
 
 Don't forget that the correct way to submit your work is by forking the repository and creating a PR.
 
-### Problema
+### Problem
 The task involves handling incoming call requests through an API Gateway. These requests should be processed either through a call queue or a ring group based on the details of the request. Each call must be logged in a database, and a message must be sent to a Queue Service that will manage the call distribution.
 
 The call management is differentiated as follows:
@@ -22,7 +22,7 @@ Here is how the flow should be managed:
         NotificationService --"Incoming Call"--> Interpreters
 ```
 
-### Requisitos
+### Requirements
 - Permitted Languages: You may use any programming language you consider appropriate for the task (Node.js, Python, Java, etc.).
 - Database: You are free to choose any database.
 - Messaging: You must use Kafka as the messaging system.
