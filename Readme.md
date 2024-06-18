@@ -15,9 +15,11 @@ Here is how the flow should be managed:
 
 ``` mermaid
     flowchart TD
-        APIGateway -- "Receive Call Request" --> CallService
-        CallService -- "Log call in DB" --> Database[(Database)]
-        CallService -- "Determine call handling" --> QueueService
+        subgraph challenge
+            APIGateway -- "Receive Call Request" --> CallService
+            CallService -- "Log call in DB" --> Database[(Database)]
+            CallService -- "Determine call handling" --> QueueService
+        end
         QueueService -- "Notify interpreters" --> NotificationService
         NotificationService --"Incoming Call"--> Interpreters
 ```
@@ -50,6 +52,7 @@ Call Response DTO:
 
 ### Considerations
 Consider scenarios of high concurrency where there may be a high volume of calls being processed simultaneously. How would you design the system to efficiently handle these scenarios?
+For the purposes of this test, you only need to implement the CallService and QueueService. However, additional services or descriptions of how you would implement them will be valued.
 
 ### Submission Instructions
 - Fork this repository.
