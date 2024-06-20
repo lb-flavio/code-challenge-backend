@@ -1,64 +1,83 @@
-## Code Challenge :rocket:
-Demonstrate your coding skills by designing and implementing a microservices system to manage phone calls via queues and ring groups.
+# Microservices Call Management System
 
-Don't forget that the correct way to submit your work is by forking the repository and creating a PR.
+## Solution Overview
 
-### Problem
-The task involves handling incoming call requests through an API Gateway. These requests should be processed either through a call queue or a ring group based on the details of the request. Each call must be logged in a database, and a message must be sent to a Queue Service that will manage the call distribution.
+This solution implements a microservices system to manage phone calls via queues and ring groups. It includes the following components:
 
-The call management is differentiated as follows:
+1. **Call Service**: Logs call details and determines call handling (queue or ring group).
+2. **Queue Service**: Manages call distribution based on the call type.
 
-- Queue: A single interpreter handles the call.
-- Ring Group: All interpreters in a group receive the call notification.
+### Call Service
 
-Here is how the flow should be managed:
+- **Functionality**: Receives call requests, logs them in the database, and determines the handling method based on the call type (queue or ring group).
+- **Technology**: Implemented using NestJS and TypeScript.
+- **Endpoints**:
+  - `POST /call`: Accepts a new call request and logs it in the database.
+- **API Documentation**: Integrated with Swagger for easy API exploration and testing, check `Step 3: Access the Services` below to access swagger.
 
-``` mermaid
-    flowchart TD
-        subgraph challenge
-            APIGateway -- "Receive Call Request" --> CallService
-            CallService -- "Log call in DB" --> Database[(Database)]
-            CallService -- "Determine call handling" --> QueueService
-        end
-        QueueService -- "Notify interpreters" --> NotificationService
-        NotificationService --"Incoming Call"--> Interpreters
+### Queue Service
+
+- **Functionality**: Consumes messages from Kafka and handles call distribution based on the call type.
+- **Technology**: Implemented using NestJS and TypeScript.
+- **Message Handling**: Listens to Kafka topics for call requests and processes them accordingly.
+
+### Integration with Kafka
+
+- **Message Broker**: Kafka is used for efficient message queuing between services, ensuring reliable and scalable communication.
+- **Topics**: 
+  - `callRequests`: Used by the Call Service to send call details to the Queue Service.
+
+### Database
+
+- **Type**: PostgreSQL
+- **Purpose**: Stores call logs with details such as caller, receiver, language, and call type.
+
+### Docker
+
+- **Usage**: Docker and Docker Compose are used to containerize the services and manage the multi-container setup, ensuring consistency across development and production environments.
+
+This solution demonstrates a scalable and efficient microservices architecture for handling phone calls via queues and ring groups. The use of Kafka is to handle high concurrency gracefully.
+
+## Running the Project
+
+### Prerequisites
+
+- Docker and Docker Compose installed on your machine.
+
+### Steps
+
+### Step 1: Clone the Repository and Checkout to the solution branch
+
+   ```sh
+   git clone <repository-url>
+   cd call-service
+   git checkout ahmed-affan-solution
+   ```
+### Step 2: Start the Services
+
+```sh
+docker-compose up --build
 ```
+This command will build and start the following services:
+- Zookeeper
+- Kafka
+- Kafka UI (for monitoring Kafka)
+- PostgreSQL
+- Call Service
+- Queue Service
 
-### Requirements
-- Permitted Languages: You may use any programming language you consider appropriate for the task (Node.js, Python, Java, etc.).
-- Database: You are free to choose any database.
-- Messaging: You must use Kafka as the messaging system.
-- APIs: You must provide a REST or GraphQL API to interact with the microservice.
+### Step 3: Access the Services
 
+- **Swagger UI for Call Service**: `http://localhost:3000/api`
+- **Kafka UI**: `http://localhost:8081`
+- **PostgreSQL**: `localhost:5432` (user: `user`, password: `password`, database: `calldb`)
 
-### Example DTOs
-Call Request DTO:
-```
-{
-  "from": "123456789",
-  "to": "987654321",
-  "language": "es",
-  "callType": "queue" // Possible values: "queue", "ring_group"
-}
-```
+## Environment Variables and Secret Management
 
-Call Response DTO:
-```
-{
-  "callId": "abc123",
-  "callStatus": "ringing" // Possible statuses: "ringing", "rejected", "accepted"
-}
-```
+ For this coding challenge, environment variables are committed in the code for simplicity. However, in a real-world scenario, the following practices should be adopted:
 
-### Considerations
-Consider scenarios of high concurrency where there may be a high volume of calls being processed simultaneously. How would you design the system to efficiently handle these scenarios?
-For the purposes of this test, you only need to implement the CallService and QueueService. However, additional services or descriptions of how you would implement them will be valued.
+1. **Environment Files**: Use environment files (`.env`) to store configuration values and secrets, but do not commit these files to version control. Instead, provide a sample configuration file (`.env.example`) without the secret values.
 
-### Submission Instructions
-- Fork this repository.
-- Complete the challenge in your fork.
-- Submit a pull request to the original repository with your changes.
-- Make sure to include detailed instructions on how to run your project, including any steps needed to set up the environment, dependencies, and the database.
+2. **Secret Management Services**: Utilize secret management services such as AWS Secrets Manager or Azure Key Vault.
 
-### Evaluation
-The system design, code quality, use of software development practices, documentation, and the efficiency of queue will be evaluated, especially in scenarios of high concurrency.
+3. **Environment-Specific Configuration**: Use different environment files or configuration management tools to handle different environments (development, staging, production) with appropriate values.
