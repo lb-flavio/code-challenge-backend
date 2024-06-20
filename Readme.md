@@ -46,11 +46,12 @@ This solution demonstrates a scalable and efficient microservices architecture f
 
 ### Steps
 
-### Step 1: Clone the Repository
+### Step 1: Clone the Repository and Checkout to the solution branch
 
    ```sh
    git clone <repository-url>
    cd call-service
+   git checkout ahmed-affan-solution
    ```
 ### Step 2: Start the Services
 
