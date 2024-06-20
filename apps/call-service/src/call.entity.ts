@@ -4,6 +4,7 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
 } from 'typeorm';
+import { CallType } from './call-type.enum';
 
 @Entity()
 export class Call {
@@ -19,8 +20,11 @@ export class Call {
   @Column()
   language: string;
 
-  @Column()
-  callType: string;
+  @Column({
+    type: 'enum',
+    enum: CallType,
+  })
+  callType: CallType;
 
   @CreateDateColumn()
   createdAt: Date;

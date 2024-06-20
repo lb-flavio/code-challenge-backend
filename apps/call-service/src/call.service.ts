@@ -29,6 +29,6 @@ export class CallService {
       messages: [{ value: JSON.stringify(createCallDto) }],
     });
 
-    return call[0];
+    return call;
   }
 }
